@@ -1,0 +1,55 @@
+> color 
+
+color = '#9BBEC8'
+
+marker_color = 'rgb(158,202,225)'
+marker_line_color='rgb(8,48,107)'
+
+color_discrete_sequence = ['#3F72AF']
+
+
+
+> Numeric columns Histogram (px) for
+
+df_num = df.select_dtypes(include = 'number').drop(columns = ['id'])
+
+for i, col in enumerate((df_num)):
+    i = df_num[col].reset_index().sort_values(col)
+    i['index'] = 1
+    fig = px.histogram(data_frame = i,
+                       x = i[col],
+                       y = i['index'],
+                       marginal = 'box',
+                       nbins = i[col].nunique(),
+                       color_discrete_sequence = ['#3F72AF'])
+    fig.update_layout(title = col, bargap = 0.1)
+    fig.show()
+
+
+> Categorical columns Barplot (sns) for
+
+df_cat = df.select_dtypes(include = 'object')
+
+for num, col in enumerate((df_cat.columns)):
+    try:    
+        num = df_cat[col].value_counts().reset_index()
+        sns.barplot(data = df_cat, x = num[col], y = num['count'], color = '#9BBEC8')
+        plt.xticks(rotation = 30)
+        plt.title(col)
+        plt.show()
+        print(num)
+    except:
+        print(col)
+        pass
+
+
+> bar + line 
+
+trace1 = go.Scatter(x = x, y = y, marker_color = 'crimson')
+trace2 = go.Bar(x = x, y = y, marker_color = 'blue')
+
+data = [trace1, trace2]
+layout = go.Layout(title = "Chol")
+fig = go.Figure(data = data, layout = layout)
+fig.update_yaxes(range = [0, 180])
+fig.show()
